@@ -687,5 +687,3 @@ listsize_quintile   1.022    0.992    1.053
 prevalence_quintile 1.040    0.986    1.097
 age65_quintile      1.008    0.952    1.068
 female_quintile     1.047    1.013    1.083
-
-NOTE: Overall Achievement CI for Q2 shows identical bounds due to vcov issue - flag to supervisor
