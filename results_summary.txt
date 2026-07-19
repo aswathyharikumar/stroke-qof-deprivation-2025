@@ -545,3 +545,33 @@ Global Deviance:     2359.243
             AIC:     2383.243 
             SBC:     2463.904 
 ******************************************************************
+
+=== VIF CHECK ===
+  listsize_quintile prevalence_quintile      age65_quintile 
+           1.033445            3.036579            3.300956 
+    female_quintile 
+           1.400008 
+
+=== VARIABILITY ANALYSIS ===
+# A tibble: 5 × 8
+  imd_quintile n_practices stia007_below_threshold stia007_pct_below
+  <fct>              <int>                   <int>             <dbl>
+1 1                   1232                       0               0  
+2 2                   1228                       0               0  
+3 3                   1227                       0               0  
+4 4                   1223                       1               0.1
+5 5                   1227                       0               0  
+  stia014_below_threshold stia014_pct_below stia015_below_threshold
+                    <int>             <dbl>                   <int>
+1                       1               0.1                       0
+2                       0               0                         1
+3                       0               0                         1
+4                       0               0                         1
+5                       0               0                         0
+  stia015_pct_below
+              <dbl>
+1               0  
+2               0.1
+3               0.1
+4               0.1
+5               0  
