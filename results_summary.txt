@@ -575,3 +575,117 @@ Global Deviance:     2359.243
 3               0.1
 4               0.1
 5               0  
+
+=== ODDS RATIOS AND 95% CI — ALL MODELS ===
+
+STIA007 MULTIVARIATE:
+                           OR  Lower  Upper
+mu.(Intercept)         16.723 15.074 18.553
+mu.imd_quintile2        0.992  0.931  1.057
+mu.imd_quintile3        0.982  0.921  1.047
+mu.imd_quintile4        0.971  0.908  1.038
+mu.imd_quintile5        1.034  0.961  1.112
+mu.listsize_quintile    1.096  1.079  1.113
+mu.prevalence_quintile  1.049  1.022  1.077
+mu.age65_quintile       1.026  0.998  1.056
+mu.female_quintile      1.020  1.002  1.038
+sigma.(Intercept)      16.723  0.158  0.166
+nu.(Intercept)          0.992  0.000    Inf
+tau.(Intercept)         0.982  0.386  0.431
+
+STIA014 MULTIVARIATE:
+                          OR Lower Upper
+mu.(Intercept)         5.177 4.916 5.453
+mu.imd_quintile2       1.000 0.965 1.037
+mu.imd_quintile3       1.006 0.970 1.043
+mu.imd_quintile4       0.980 0.944 1.018
+mu.imd_quintile5       0.985 0.946 1.025
+mu.listsize_quintile   0.959 0.951 0.967
+mu.prevalence_quintile 1.020 1.005 1.035
+mu.age65_quintile      0.967 0.952 0.983
+mu.female_quintile     1.002 0.993 1.012
+sigma.(Intercept)      5.177 0.215 0.224
+nu.(Intercept)         1.000 0.000   Inf
+tau.(Intercept)        1.006 0.005 0.009
+
+STIA015 MULTIVARIATE:
+                          OR Lower Upper
+mu.(Intercept)         9.236 8.634 9.881
+mu.imd_quintile2       1.003 0.961 1.047
+mu.imd_quintile3       1.013 0.969 1.059
+mu.imd_quintile4       0.963 0.920 1.008
+mu.imd_quintile5       0.981 0.933 1.030
+mu.listsize_quintile   0.982 0.972 0.992
+mu.prevalence_quintile 1.019 1.001 1.037
+mu.age65_quintile      0.964 0.946 0.983
+mu.female_quintile     1.012 1.000 1.024
+sigma.(Intercept)      9.236 0.200 0.209
+nu.(Intercept)         1.003 0.000 0.001
+tau.(Intercept)        1.013 0.113 0.132
+
+OVERALL ACHIEVEMENT MULTIVARIATE:
+                          OR Lower Upper
+mu.(Intercept)         7.743 6.544 9.163
+mu.imd_quintile2       0.957 0.957 0.957
+mu.imd_quintile3       0.977 0.872 1.095
+mu.imd_quintile4       0.928 0.826 1.042
+mu.imd_quintile5       1.058 0.934 1.199
+mu.listsize_quintile   1.022 0.992 1.053
+mu.prevalence_quintile 1.040 0.986 1.097
+mu.age65_quintile      1.008 0.952 1.068
+mu.female_quintile     1.047 1.013 1.083
+sigma.(Intercept)      7.743 0.351 0.385
+nu.(Intercept)         0.957   NaN   NaN
+tau.(Intercept)        0.977 2.795 3.136
+
+=== CLEAN ODDS RATIO TABLES ===
+
+STIA007:
+                        OR Lower_CI Upper_CI
+(Intercept)         16.723   15.074   18.553
+imd_quintile2        0.992    0.931    1.057
+imd_quintile3        0.982    0.921    1.047
+imd_quintile4        0.971    0.908    1.038
+imd_quintile5        1.034    0.961    1.112
+listsize_quintile    1.096    1.079    1.113
+prevalence_quintile  1.049    1.022    1.077
+age65_quintile       1.026    0.998    1.056
+female_quintile      1.020    1.002    1.038
+
+STIA014:
+                       OR Lower_CI Upper_CI
+(Intercept)         5.177    4.916    5.453
+imd_quintile2       1.000    0.965    1.037
+imd_quintile3       1.006    0.970    1.043
+imd_quintile4       0.980    0.944    1.018
+imd_quintile5       0.985    0.946    1.025
+listsize_quintile   0.959    0.951    0.967
+prevalence_quintile 1.020    1.005    1.035
+age65_quintile      0.967    0.952    0.983
+female_quintile     1.002    0.993    1.012
+
+STIA015:
+                       OR Lower_CI Upper_CI
+(Intercept)         9.236    8.634    9.881
+imd_quintile2       1.003    0.961    1.047
+imd_quintile3       1.013    0.969    1.059
+imd_quintile4       0.963    0.920    1.008
+imd_quintile5       0.981    0.933    1.030
+listsize_quintile   0.982    0.972    0.992
+prevalence_quintile 1.019    1.001    1.037
+age65_quintile      0.964    0.946    0.983
+female_quintile     1.012    1.000    1.024
+
+OVERALL ACHIEVEMENT:
+                       OR Lower_CI Upper_CI
+(Intercept)         7.743    6.544    9.163
+imd_quintile2       0.957    0.957    0.957
+imd_quintile3       0.977    0.872    1.095
+imd_quintile4       0.928    0.826    1.042
+imd_quintile5       1.058    0.934    1.199
+listsize_quintile   1.022    0.992    1.053
+prevalence_quintile 1.040    0.986    1.097
+age65_quintile      1.008    0.952    1.068
+female_quintile     1.047    1.013    1.083
+
+NOTE: Overall Achievement CI for Q2 shows identical bounds due to vcov issue - flag to supervisor
