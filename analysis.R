@@ -129,4 +129,76 @@ model_stia014_multi <- gamlss(prop_stia014 ~ imd_quintile + listsize_quintile +
                               family = BEINF, data = final_model, trace = FALSE)
 
 # STIA015
-model_stia015_uni <-
+model_stia015_uni <- gamlss(prop_stia015 ~ imd_quintile,
+                            family = BEINF, data = final_model, trace = FALSE)
+model_stia015_multi <- gamlss(prop_stia015 ~ imd_quintile + listsize_quintile +
+                                prevalence_quintile + age65_quintile + female_quintile,
+                              family = BEINF, data = final_model, trace = FALSE)
+
+# Overall Achievement
+model_overall_uni <- gamlss(overall_achievement ~ imd_quintile,
+                            family = BEINF, data = final_model, trace = FALSE)
+model_overall_multi <- gamlss(overall_achievement ~ imd_quintile + listsize_quintile +
+                                prevalence_quintile + age65_quintile + female_quintile,
+                              family = BEINF, data = final_model, trace = FALSE)
+
+# ------------------------------------------------
+# SECTION 7 — Extract Odds Ratios and CIs
+# ------------------------------------------------
+
+extract_results <- function(model) {
+  or <- exp(coef(model))
+  ci <- exp(confint(model))
+  mu_rows <- grep("^mu\\.", rownames(ci))
+  results <- data.frame(
+    OR = round(or, 3),
+    Lower_CI = round(ci[mu_rows, 1], 3),
+    Upper_CI = round(ci[mu_rows, 2], 3)
+  )
+  return(results)
+}
+
+cat("\n=== STIA007 ===\n")
+print(extract_results(model_stia007_multi))
+
+cat("\n=== STIA014 ===\n")
+print(extract_results(model_stia014_multi))
+
+cat("\n=== STIA015 ===\n")
+print(extract_results(model_stia015_multi))
+
+cat("\n=== OVERALL ACHIEVEMENT ===\n")
+print(extract_results(model_overall_multi))
+
+# ------------------------------------------------
+# SECTION 8 — VIF Check
+# ------------------------------------------------
+
+vif_model <- lm(prop_stia007 ~ listsize_quintile +
+                  prevalence_quintile +
+                  age65_quintile +
+                  female_quintile,
+                data = final_model)
+
+cat("\n=== VIF CHECK ===\n")
+print(vif(vif_model))
+
+# ------------------------------------------------
+# SECTION 9 — Variability Analysis
+# ------------------------------------------------
+
+variability <- final_clean %>%
+  group_by(imd_quintile) %>%
+  summarise(
+    n_practices = n(),
+    stia007_below_threshold = sum(prop_stia007 < 0.57, na.rm = TRUE),
+    stia007_pct_below = round(stia007_below_threshold / n_practices * 100, 1),
+    stia014_below_threshold = sum(prop_stia014 < 0.40, na.rm = TRUE),
+    stia014_pct_below = round(stia014_below_threshold / n_practices * 100, 1),
+    stia015_below_threshold = sum(prop_stia015 < 0.46, na.rm = TRUE),
+    stia015_pct_below = round(stia015_below_threshold / n_practices * 100, 1)
+  )
+
+cat("\n=== VARIABILITY ANALYSIS ===\n")
+print(variability, width = Inf)
+  
