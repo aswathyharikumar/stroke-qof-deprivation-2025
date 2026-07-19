@@ -180,3 +180,147 @@ write.csv(final_clean,
           row.names = FALSE)
 
 cat("Data cleaning complete. Final dataset saved.\n")
+# ================================================
+# SECTION 8 — Descriptive Statistics
+# ================================================
+
+descriptive_stats <- final_clean %>%
+  group_by(imd_quintile) %>%
+  summarise(
+    median_overall = median(overall_achievement, na.rm = TRUE),
+    iqr_overall = IQR(overall_achievement, na.rm = TRUE),
+    median_stia007 = median(prop_stia007, na.rm = TRUE),
+    iqr_stia007 = IQR(prop_stia007, na.rm = TRUE),
+    median_stia014 = median(prop_stia014, na.rm = TRUE),
+    iqr_stia014 = IQR(prop_stia014, na.rm = TRUE),
+    median_stia015 = median(prop_stia015, na.rm = TRUE),
+    iqr_stia015 = IQR(prop_stia015, na.rm = TRUE)
+  )
+
+print(descriptive_stats)
+
+# ================================================
+# SECTION 9 — Box Plots
+# ================================================
+
+plot_data <- final_clean %>%
+  select(imd_quintile, prop_stia007, prop_stia014,
+         prop_stia015, overall_achievement) %>%
+  pivot_longer(
+    cols = c(prop_stia007, prop_stia014, prop_stia015, overall_achievement),
+    names_to = "indicator",
+    values_to = "proportion"
+  ) %>%
+  mutate(
+    indicator = recode(indicator,
+                       "overall_achievement" = "Overall Achievement",
+                       "prop_stia007" = "STIA007",
+                       "prop_stia014" = "STIA014",
+                       "prop_stia015" = "STIA015"
+    ),
+    imd_quintile = factor(imd_quintile,
+                          labels = c("Q1\n(least deprived)",
+                                     "Q2", "Q3", "Q4",
+                                     "Q5\n(most deprived)"))
+  )
+
+ggplot(plot_data, aes(x = imd_quintile, y = proportion, fill = imd_quintile)) +
+  geom_boxplot(outlier.size = 0.5) +
+  facet_wrap(~ indicator, scales = "free_y", ncol = 2) +
+  scale_fill_brewer(palette = "Blues") +
+  labs(
+    title = "QOF Stroke Indicator Performance by IMD Quintile",
+    x = "IMD Quintile",
+    y = "Proportion",
+    caption = "Q1 = least deprived, Q5 = most deprived"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggsave("C:/Users/Aswathy Harikumar/OneDrive/Desktop/stroke_study/boxplots_by_quintile.png",
+       width = 10, height = 8, dpi = 300)
+
+# ================================================
+# SECTION 10 — Kruskal-Wallis Tests
+# ================================================
+
+kw_overall <- kruskal.test(overall_achievement ~ imd_quintile, data = final_clean)
+kw_stia007 <- kruskal.test(prop_stia007 ~ imd_quintile, data = final_clean)
+kw_stia014 <- kruskal.test(prop_stia014 ~ imd_quintile, data = final_clean)
+kw_stia015 <- kruskal.test(prop_stia015 ~ imd_quintile, data = final_clean)
+
+cat("Kruskal-Wallis Results:\n")
+cat("Overall Achievement p =", kw_overall$p.value, "\n")
+cat("STIA007 p =", kw_stia007$p.value, "\n")
+cat("STIA014 p =", kw_stia014$p.value, "\n")
+cat("STIA015 p =", kw_stia015$p.value, "\n")
+
+# ================================================
+# SECTION 11 — Wilcoxon Pairwise Tests
+# ================================================
+
+library(rstatix)
+
+wilcox_stia007 <- final_clean %>%
+  wilcox_test(prop_stia007 ~ imd_quintile, p.adjust.method = "bonferroni")
+
+wilcox_stia015 <- final_clean %>%
+  wilcox_test(prop_stia015 ~ imd_quintile, p.adjust.method = "bonferroni")
+
+print(wilcox_stia007)
+print(wilcox_stia015)
+
+# ================================================
+# SECTION 12 — ZOIBR Regression Models
+# ================================================
+
+library(gamlss)
+
+final_model <- na.omit(final_clean)
+final_model$imd_quintile <- factor(final_model$imd_quintile)
+
+# STIA007
+model_stia007_uni <- gamlss(prop_stia007 ~ imd_quintile,
+                            family = BEINF, data = final_model, trace = FALSE)
+model_stia007_multi <- gamlss(prop_stia007 ~ imd_quintile + listsize_quintile +
+                                prevalence_quintile + age65_quintile + female_quintile,
+                              family = BEINF, data = final_model, trace = FALSE)
+
+# STIA014
+model_stia014_uni <- gamlss(prop_stia014 ~ imd_quintile,
+                            family = BEINF, data = final_model, trace = FALSE)
+model_stia014_multi <- gamlss(prop_stia014 ~ imd_quintile + listsize_quintile +
+                                prevalence_quintile + age65_quintile + female_quintile,
+                              family = BEINF, data = final_model, trace = FALSE)
+
+# STIA015
+model_stia015_uni <- gamlss(prop_stia015 ~ imd_quintile,
+                            family = BEINF, data = final_model, trace = FALSE)
+model_stia015_multi <- gamlss(prop_stia015 ~ imd_quintile + listsize_quintile +
+                                prevalence_quintile + age65_quintile + female_quintile,
+                              family = BEINF, data = final_model, trace = FALSE)
+
+# Overall Achievement
+model_overall_uni <- gamlss(overall_achievement ~ imd_quintile,
+                            family = BEINF, data = final_model, trace = FALSE)
+model_overall_multi <- gamlss(overall_achievement ~ imd_quintile + listsize_quintile +
+                                prevalence_quintile + age65_quintile + female_quintile,
+                              family = BEINF, data = final_model, trace = FALSE)
+
+# Print all summaries
+cat("\n--- STIA007 Univariate ---\n")
+summary(model_stia007_uni)
+cat("\n--- STIA007 Multivariate ---\n")
+summary(model_stia007_multi)
+cat("\n--- STIA014 Univariate ---\n")
+summary(model_stia014_uni)
+cat("\n--- STIA014 Multivariate ---\n")
+summary(model_stia014_multi)
+cat("\n--- STIA015 Univariate ---\n")
+summary(model_stia015_uni)
+cat("\n--- STIA015 Multivariate ---\n")
+summary(model_stia015_multi)
+cat("\n--- Overall Achievement Univariate ---\n")
+summary(model_overall_uni)
+cat("\n--- Overall Achievement Multivariate ---\n")
+summary(model_overall_multi)
